@@ -1,0 +1,165 @@
+<!doctype html>
+<head>
+	<title>AudioMasher - Featured: Drone Spirit A by pac</title>
+	<meta charset="UTF-8">
+	<meta name="google" content="notranslate">
+	<meta http-equiv="Content-Language" content="en">
+	<link rel="stylesheet" href="https://static.audiomasher.org/masher.css">
+	<link rel="stylesheet" href="https://static.audiomasher.org/codemirror/codemirror.css">
+	<style>
+		#controls>a::after {background-image: url("https://static.audiomasher.org/controls.svg");}
+		#play_loading {background-image: url("https://static.audiomasher.org/loading.gif");}
+	</style>
+	<script>
+		staticRoot = "https:\/\/static.audiomasher.org\/";
+	</script>
+</head>
+<body class=drk>
+	<div class=top_bar>
+		<a href="/about" class="title L"><span>Audio</span><span>Masher</span></a>
+		<div class="headline L"><div>
+			<a href="/continue" class=restore_link>[continue autosave] </a>
+			
+				Featured: Drone Spirit A by pac
+			
+		</div></div>
+		
+		
+			<a class=R href="#login_modal" title="Log in">log in</a>
+		
+		<a class=R href="/learn">learn</a>
+		<a class=R href="/new">new</a>
+		<a class=R href="/browse">browse</a>
+	</div>
+	
+		
+	<div class=left_pane>
+		<div id=editor_container>
+			<textarea id=editor_area autocomplete=off>_sin 4096 gen_sine
+_env 4096 &#39;0.5 0.5 270 0.5&#39; gen_composite
+_pulse 64 &#39;tick dur 0.22 * tgate dur 0.1 * port&#39; gen_eval
+
+# base MIDI note
+_key 50 varset
+
+# generate drone: pinknoise -&gt; string resonators
+0.15 pinknoise
+(_key get mtof) 0.1 (0.05 0.4 0.5 _pulse osc)&#43; streson
+(_key get mtof 0.5 *) 0.2 streson
+(_key get mtof 0.25 *) 0.95 streson
+dcblk
+
+# shape drone spectrum: moving equalizer
+# (pareq: freq, boost, Q, mode)
+1000  0.1 (0.1 0.7 0.7 _pulse osc)&#43; 0.6 2 pareq
+3000  0.02(0.1 1.5 0.3 _pulse osc)&#43; 0.7 2 pareq
+4000  0.001 1 2 pareq
+
+# add granular sweep - fof has 12 arguments:
+# amp  fundamental            formant
+0.06   (_key get mtof 0.5 *) (0.1 200 sine 500 &#43;)
+# oct band ris   dec    dur  iphs laps win  sine
+  0   1    0.003 0.0007 0.02 0    5    _env _sin fof
+
+# mix and add ambiance
+(&#43;) dup 0.6 0.33 delay &#43;
+dup 10 6 6000 zrev &#43; # (zrev: in1 rtlo rthi hfdmp)
+500 0.3 0.3 0 pareq 2 *</textarea>
+		</div>
+		<div id=controls>
+			<div id=play_loading></div>
+			<a id=c_play class=nodisplay title="Compile & start audio (from editor: ctrl+Enter)"></a>
+			<a id=c_stop title="Stop audio (from editor: ctrl+Space)"></a>
+			<a id=c_params title="Show/hide parameter sliders"></a>
+			<a id=c_help title="Show/hide help and quick reference"></a>
+			
+			<a href="#signup_modal" id=c_post title="Post Patch..."></a>
+			
+		</div>
+		<div id=tooltip></div>
+		<div id=errors></div>
+	</div>
+	<div class=params_pane>
+		<br>
+		<em id=no_params>No parameters.</em><br>
+		<div id=sliders>
+		</div>
+		<br><br>
+	</div>
+	<div class=help_pane>
+		
+		<a class="tab_thumb active_thumb" href="#metadata">
+			meta
+		</a>
+		<a class=tab_thumb href="#quick_ref">
+			quick ref
+		</a>
+		
+		<a class=tab_thumb href="#help">
+			help
+		</a>
+		
+		<div class="tab_content active_content" id=metadata>
+			<em>Title:</em><br>
+			<span id=PTitle>Drone Spirit A</span><br><br>
+			<em>Author:</em><br>
+			<a id=PAuthor href="/user/pac">pac</a><br><br>
+			<em>Description:</em><br>
+			<span id=PDesc>Try changing the key, using a different technique for sweep and spectrum shaping.</span><br><br>
+			<em>Created:</em> 2018/05/21
+			<br><br>
+			<em>Modified:</em> 2018/05/21
+			<br><br>
+			<i><a href="/about#patchlicense">License</a></i>
+			<br><br>
+			<span id=PId style="display:none">OZOIGB</span>
+		</div>
+		<div class=tab_content id=quick_ref>
+			loading...
+		</div>
+		
+		<div class=tab_content id=help>
+			Here are some Sporth learning resources (most of them by Paul Batchelor):
+			<br>
+			<ul><li>
+				The 
+				<a href="/learn">interactive cookbook</a> 
+				is a tutorial where you can run all the example code online (it's based on the 
+				<a href="http://paulbatchelor.github.io/proj/cook/">original cookbook</a>).
+			</li><li>
+				The 
+				<a href="https://github.com/PaulBatchelor/Sporth/tree/master/examples">examples</a> 
+				demonstate a variety of Sporth ugens. Note: those that rely on external files will 
+				not work in AudioMasher.
+			</li><li>
+				The 
+				<a href="http://paulbatchelor.github.io/res/soundpipe/docs/">Soundpipe modules reference</a> 
+				goes into more detail on the underlying function powering each Sporth ugen.
+			</li><li>
+				The 
+				<a href="/browse">AudioMasher collection</a> 
+				can certainly be used as learning material.
+			</li></ul>
+			<br>
+			And some information about AudioMasher:
+			<br>
+			<ul><li> 
+				<a href="/about">Frequently Asked Questions</a>
+			</li><li>
+				<a href="https://github.com/pac-dev/AudioMasher">Source on Github</a>
+			</li></ul>
+			<br><br>
+		</div>
+	</div>
+	
+	<div id=modal_back></div>
+	<div id=modal_front></div>
+	<script src="https://static.audiomasher.org/codemirror/codemirror.js"></script>
+	<script src="https://static.audiomasher.org/codemirror/addon/mode/simple.js"></script>
+	<script src="https://static.audiomasher.org/ugen_reference.js"></script>
+	<script src="https://static.audiomasher.org/sporthparams.js"></script>
+	<script src="https://static.audiomasher.org/masher.js"></script>
+	<script async src="https://static.audiomasher.org/sporthem.js"></script>
+	<script></script>
+	<input type=hidden value="" />
+</body>
